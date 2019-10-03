@@ -17,8 +17,13 @@ export default class Task extends React.Component {
     getDuration() {
         const start = moment(this.state.start);
         const end = this.state.end ? moment(this.state.end) : moment();
+        const diff = end.diff(start);
 
-        return moment.utc(end.diff(start)).format("HH:mm:ss");
+        if (diff < 0) {
+            return "you destroyed it you fool!";
+        }
+
+        return moment.utc(diff).format("HH:mm:ss");
     }
 
     getPaid() {
@@ -28,7 +33,7 @@ export default class Task extends React.Component {
             </button>);
         } else {
             return (<button type="button" className="btn btn-light btn-sm" onClick={this.onChange.bind(this, "paid", true)}>
-                <i className="fas fa-dollar-sign" style={{color: "#dc3545"}}/>
+                <i className="fas fa-dollar-sign" style={{color: "#dc3240"}}/>
             </button>);
         }
     }
@@ -56,7 +61,13 @@ export default class Task extends React.Component {
                         {this.getPaid()}
                         {this.getStartStop()}
                         <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskRound}>
-                            <i className="fas fa-sync"/>
+                            <i className="fas fa-magic"/>
+                        </button>
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskUp}>
+                            <i className="fas fa-plus"/>
+                        </button>
+                        <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskDown}>
+                            <i className="fas fa-minus"/>
                         </button>
                     </div>
                 </div>

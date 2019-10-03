@@ -3,6 +3,9 @@ function leadingZeroes(string, length) {
 }
 
 function formatDuration(duration) {
+    if (!duration) {
+        return null;
+    }
     return leadingZeroes(duration.hours(), 2) + ":" + leadingZeroes(duration.minutes(), 2) + ":" + leadingZeroes(duration.seconds(), 2);
 }
 

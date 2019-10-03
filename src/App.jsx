@@ -80,6 +80,29 @@ export default class App extends React.Component {
         });
     }
 
+    onTaskModifyDuration(index, amount) {
+        const tasks = this.state.tasks.concat([]);
+        if (tasks[index].end) {
+            tasks[index].end = moment(tasks[index].end).add(amount, "minutes");
+        } else {
+            tasks[index].start = moment(tasks[index].start).subtract(amount, "minutes");
+        }
+        tasks[index].duration = moment.duration(moment(tasks[index].end).diff(moment(tasks[index].start)));
+
+        this.setState({
+            tasks
+        });
+    }
+
+    onCreateMissingTask() {
+        this.onTaskAdd({
+            name: "Task",
+            start: moment().subtract(this.getMissing().asMinutes(), "minutes"),
+            end: moment(),
+            paid: false
+        });
+    }
+
     onTaskAdd(item) {
         this.setState({
             tasks: this.state.tasks.concat([item])
@@ -106,6 +129,10 @@ export default class App extends React.Component {
         return duration;
     }
 
+    getMissing() {
+        return moment.duration().add(8, "hours").subtract(this.getTotal().asMinutes(), "minutes");
+    }
+
     getToFullDay() {
         const current = this.getTotal();
         const left = moment.duration(8, "hours");
@@ -114,11 +141,25 @@ export default class App extends React.Component {
     }
 
     render() {
+        const missingDuration = this.getMissing();
+        const total = this.getTotal();
+        const toFullDay = this.getToFullDay();
+
         return (
             <div className="time-wrapper">
+                <div className="card mb-3">
+                    <div className="card-body text-primary bg-dark">
+                        <h5 className="mb-0">Time Tracking</h5>
+                    </div>
+                </div>
                 <div className="card text-white bg-secondary mb-3">
                     <div className="card-body">
-                        {formatDuration(this.getTotal())} / {formatDuration(this.getToFullDay())}
+                        <p>{formatDuration(total)} {toFullDay.asMinutes() > 0 ? "/ " + formatDuration(toFullDay) : null}</p>
+                        {toFullDay > 0 && missingDuration && missingDuration.asMinutes() > 0 ?
+                            (<button type="button" className="btn btn-danger btn-sm"
+                                     onClick={this.onCreateMissingTask.bind(this)}>
+                                + {formatDuration(missingDuration)}
+                            </button>) : null}
                     </div>
                 </div>
                 {this.state.tasks.map((task, index) =>
@@ -127,6 +168,8 @@ export default class App extends React.Component {
                            onTaskStop={this.onTaskStop.bind(this, index)}
                            onTaskResume={this.onTaskResume.bind(this, index)}
                            onTaskRound={this.onTaskRound.bind(this, index)}
+                           onTaskUp={this.onTaskModifyDuration.bind(this, index, 15)}
+                           onTaskDown={this.onTaskModifyDuration.bind(this, index, -15)}
                     />)
                 )}
                 <button type="button" className="btn btn-primary w-100" onClick={this.onTaskAdd.bind(this, {
