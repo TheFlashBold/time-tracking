@@ -27,5 +27,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "bootstrap": "^4.3.1",
+    "moment": "^2.24.0",
+    "mpath": "^0.6.0"
   }
 }

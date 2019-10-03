@@ -1,26 +1,143 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Task from "./components/Task"
+import moment from "moment"
+import {formatDuration} from "./lib/Utils"
+import StorageManager from "./lib/StorageManager"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            tasks: StorageManager.get("tasks", [])
+        };
+
+        this.interval = null;
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(() => {
+            this.forceUpdate();
+        }, 1000);
+
+        setInterval(() => {
+            StorageManager.set("tasks", this.state.tasks);
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    onTaskUpdate(task, index, data) {
+        const tasks = this.state.tasks.concat([]);
+
+        tasks[index] = Object.assign(tasks[index], data);
+
+        this.setState({
+            tasks: tasks
+        });
+    }
+
+    onTaskStop(index) {
+        const tasks = this.state.tasks.concat([]);
+
+        tasks[index].end = moment();
+        tasks[index].duration = moment.duration(tasks[index].end.diff(tasks[index].start));
+
+        this.setState({
+            tasks: tasks
+        });
+    }
+
+    onTaskResume(index) {
+        const tasks = this.state.tasks.concat([]);
+
+        tasks[index].start = moment().subtract(moment.duration(tasks[index].duration).asMinutes(), "minutes");
+        tasks[index].end = null;
+
+        this.setState({
+            tasks: tasks
+        });
+    }
+
+    onTaskRound(index) {
+        const tasks = this.state.tasks.concat([]);
+        const end = tasks[index].end ? moment(tasks[index].end) : moment();
+        const duration = moment.duration(end.diff(tasks[index].start));
+
+        if (duration.asMinutes() < 5 || duration.asMinutes() % 15 > 5) {
+            duration.add(15 - duration.asMinutes() % 15, "minutes");
+        } else {
+            duration.subtract(duration.asMinutes() % 15, "minutes");
+        }
+
+        tasks[index].start = end.subtract(duration.asMinutes(), "minutes");
+        tasks[index].duration = duration;
+
+        this.setState({
+            tasks: tasks
+        });
+    }
+
+    onTaskAdd(item) {
+        this.setState({
+            tasks: this.state.tasks.concat([item])
+        });
+    }
+
+    onTaskRemove(index) {
+        const tasks = this.state.tasks.concat([]);
+
+        tasks.splice(index, 1);
+
+        this.setState({
+            tasks
+        });
+    }
+
+    getTotal() {
+        const duration = moment.duration();
+        this.state.tasks.forEach((task) => {
+            const start = moment(task.start);
+            const end = task.end ? moment(task.end) : moment();
+            duration.add(end.diff(start));
+        });
+        return duration;
+    }
+
+    getToFullDay() {
+        const current = this.getTotal();
+        const left = moment.duration(8, "hours");
+        left.subtract(current.asMinutes(), "minutes");
+        return left;
+    }
+
+    render() {
+        return (
+            <div className="time-wrapper">
+                <div className="card text-white bg-secondary mb-3">
+                    <div className="card-body">
+                        {formatDuration(this.getTotal())} / {formatDuration(this.getToFullDay())}
+                    </div>
+                </div>
+                {this.state.tasks.map((task, index) =>
+                    (<Task key={index} data={task} onTaskUpdate={this.onTaskUpdate.bind(this, task, index)}
+                           onTaskRemove={this.onTaskRemove.bind(this, index)}
+                           onTaskStop={this.onTaskStop.bind(this, index)}
+                           onTaskResume={this.onTaskResume.bind(this, index)}
+                           onTaskRound={this.onTaskRound.bind(this, index)}
+                    />)
+                )}
+                <button type="button" className="btn btn-primary w-100" onClick={this.onTaskAdd.bind(this, {
+                    name: "Task",
+                    start: moment(),
+                    end: null,
+                    paid: false
+                })}>
+                    +
+                </button>
+            </div>
+        );
+    }
 }
-
-export default App;
