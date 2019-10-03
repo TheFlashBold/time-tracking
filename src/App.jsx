@@ -134,10 +134,7 @@ export default class App extends React.Component {
     }
 
     getToFullDay() {
-        const current = this.getTotal();
-        const left = moment.duration(8, "hours");
-        left.subtract(current.asMinutes(), "minutes");
-        return left;
+        return moment.duration(8, "hours").subtract(this.getTotal().asMinutes(), "minutes");
     }
 
     render() {
