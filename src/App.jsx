@@ -150,12 +150,11 @@ export default class App extends React.Component {
                     </div>
                 </div>
                 <div className="card text-white bg-secondary mb-3">
-                    <div className="card-body">
+                    <div className="card-body" style={{textAlign: "center"}}>
                         <p>{formatDuration(total)} {toFullDay.asMinutes() > 0 ? "/ " + formatDuration(toFullDay) : null}</p>
-                        {toFullDay > 0 && missingDuration && missingDuration.asMinutes() > 0 ?
-                            (<button type="button" className="btn btn-danger btn-sm"
-                                     onClick={this.onCreateMissingTask.bind(this)}>
-                                + {formatDuration(missingDuration)}
+                        {missingDuration && missingDuration.asMinutes() > 0 ?
+                            (<button type="button" className="btn btn-danger btn-sm" onClick={this.onCreateMissingTask.bind(this)}>
+                                <i className="fas fa-plus fa-sm"/> {formatDuration(missingDuration)}
                             </button>) : null}
                     </div>
                 </div>
@@ -175,7 +174,7 @@ export default class App extends React.Component {
                     end: null,
                     paid: false
                 })}>
-                    +
+                    <i className="fas fa-plus"/>
                 </button>
             </div>
         );

@@ -4,7 +4,7 @@ class StorageManager {
 
     constructor() {
         this.data = {};
-        const storage = sessionStorage.getItem("storage");
+        const storage = localStorage.getItem("storage");
         if (storage) {
             this.data = JSON.parse(storage);
         }
@@ -16,7 +16,7 @@ class StorageManager {
 
     set(path, value) {
         mpath.set(path, value, this.data);
-        sessionStorage.setItem("storage", JSON.stringify(this.data));
+        localStorage.setItem("storage", JSON.stringify(this.data));
     }
 }
 
