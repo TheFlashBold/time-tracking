@@ -3,13 +3,15 @@ import Task from "./components/Task"
 import moment from "moment"
 import {formatDuration} from "./lib/Utils"
 import StorageManager from "./lib/StorageManager"
+import TaskOverview from "./components/TaskOverview";
 
 export default class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            tasks: StorageManager.get("tasks", [])
+            tasks: StorageManager.get("tasks", []),
+            showOverview: false
         };
 
         this.interval = null;
@@ -137,23 +139,25 @@ export default class App extends React.Component {
         return moment.duration(8, "hours").subtract(this.getTotal().asMinutes(), "minutes");
     }
 
-    render() {
+    onToggleOverview(event, state) {
+        this.setState({
+            showOverview: state !== undefined ? state : !this.state.showOverview
+        });
+    }
+
+    renderTracker() {
         const missingDuration = this.getMissing();
         const total = this.getTotal();
         const toFullDay = this.getToFullDay();
 
         return (
-            <div className="time-wrapper">
-                <div className="card mb-3">
-                    <div className="card-body text-primary bg-dark">
-                        <h5 className="mb-0">Time Tracking</h5>
-                    </div>
-                </div>
-                <div className="card text-white bg-secondary mb-3">
+            <React.Fragment>
+                <div className="card text-white bg-secondary mb-2">
                     <div className="card-body" style={{textAlign: "center"}}>
                         <p>{formatDuration(total)} {toFullDay.asMinutes() > 0 ? "/ " + formatDuration(toFullDay) : null}</p>
                         {missingDuration && missingDuration.asMinutes() > 0 ?
-                            (<button type="button" className="btn btn-danger btn-sm" onClick={this.onCreateMissingTask.bind(this)}>
+                            (<button type="button" className="btn btn-danger btn-sm"
+                                     onClick={this.onCreateMissingTask.bind(this)}>
                                 <i className="fas fa-plus fa-sm"/> {formatDuration(missingDuration)}
                             </button>) : null}
                     </div>
@@ -168,13 +172,29 @@ export default class App extends React.Component {
                            onTaskDown={this.onTaskModifyDuration.bind(this, index, -15)}
                     />)
                 )}
-                <button type="button" className="btn btn-primary w-100" onClick={this.onTaskAdd.bind(this, {
+                <button type="button" className="btn btn-primary w-100 mb-2" onClick={this.onTaskAdd.bind(this, {
                     name: "Task",
                     start: moment(),
                     end: null,
                     paid: false
                 })}>
                     <i className="fas fa-plus"/>
+                </button>
+            </React.Fragment>
+        )
+    }
+
+    render() {
+        return (
+            <div className="time-wrapper">
+                <div className="card mb-2">
+                    <div className="card-body text-primary bg-dark">
+                        <h5 className="mb-0">Time Tracking</h5>
+                    </div>
+                </div>
+                {this.state.showOverview ? <TaskOverview tasks={this.state.tasks}/> : this.renderTracker()}
+                <button type="button" className="btn btn-secondary w-100" onClick={this.onToggleOverview.bind(this)}>
+                    <i className="fas fa-random"/>
                 </button>
             </div>
         );

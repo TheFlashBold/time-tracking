@@ -48,7 +48,7 @@ export default class Task extends React.Component {
 
     render() {
         return (
-            <div className="task toast show">
+            <div className="task toast show mb-2">
                 <div className="toast-header">
                     <ContentEditable tag="strong" className="mr-auto" html={this.state.name} onChange={this.onChange.bind(this, "name")}/>
                     <small className="text-muted"><b>{this.getDuration()}</b></small>
