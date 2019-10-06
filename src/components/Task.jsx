@@ -60,7 +60,7 @@ export default class Task extends React.Component {
                     <div className="btn-group">
                         {this.getPaid()}
                         {this.getStartStop()}
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskRound}>
+                        <button type="button" className="btn btn-primary btn-sm" onClick={this.props.onTaskRound}>
                             <i className="fas fa-magic"/>
                         </button>
                         <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskUp}>
