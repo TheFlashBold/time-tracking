@@ -40,9 +40,13 @@ export default class Task extends React.Component {
 
     getStartStop() {
         if (this.state.end) {
-            return (<button type="button" className="btn btn-success btn-sm" onClick={this.props.onTaskResume}>resume</button>);
+            return (<button type="button" className="btn btn-success btn-sm" onClick={this.props.onTaskResume}>
+                <i className="fas fa-play"/>
+            </button>);
         } else {
-            return (<button type="button" className="btn btn-danger btn-sm" onClick={this.props.onTaskStop}>stop</button>)
+            return (<button type="button" className="btn btn-danger btn-sm" onClick={this.props.onTaskStop}>
+                <i className="fas fa-pause"/>
+            </button>)
         }
     }
 
