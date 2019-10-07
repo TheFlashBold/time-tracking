@@ -97,10 +97,12 @@ export default class App extends React.Component {
     }
 
     onCreateMissingTask() {
+        const start = moment().subtract(this.getMissing().asMinutes(), "minutes");
         this.onTaskAdd({
             name: "Task",
-            start: moment().subtract(this.getMissing().asMinutes(), "minutes"),
+            start: start,
             end: moment(),
+            duration: moment.duration(moment().diff(moment(start))),
             paid: false
         });
     }
