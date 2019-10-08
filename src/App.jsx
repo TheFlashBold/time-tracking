@@ -123,6 +123,10 @@ export default class App extends React.Component {
         });
     }
 
+    onTaskToggle(task, index) {
+        this.onTaskUpdate(task, index, {closed: !task.closed});
+    }
+
     getTotal() {
         const duration = moment.duration();
         this.state.tasks.forEach((task) => {
@@ -165,13 +169,14 @@ export default class App extends React.Component {
                     </div>
                 </div>
                 {this.state.tasks.map((task, index) =>
-                    (<Task key={index} data={task} onTaskUpdate={this.onTaskUpdate.bind(this, task, index)}
+                    (<Task key={index + String(task.start) + String(task.duration)} data={task} onTaskUpdate={this.onTaskUpdate.bind(this, task, index)}
                            onTaskRemove={this.onTaskRemove.bind(this, index)}
                            onTaskStop={this.onTaskStop.bind(this, index)}
                            onTaskResume={this.onTaskResume.bind(this, index)}
                            onTaskRound={this.onTaskRound.bind(this, index)}
                            onTaskUp={this.onTaskModifyDuration.bind(this, index, 15)}
                            onTaskDown={this.onTaskModifyDuration.bind(this, index, -15)}
+                           onTaskToggle={this.onTaskToggle.bind(this, task, index)}
                     />)
                 )}
                 <button type="button" className="btn btn-primary w-100 mb-2" onClick={this.onTaskAdd.bind(this, {

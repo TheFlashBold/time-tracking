@@ -58,6 +58,27 @@ export default class Task extends React.Component {
         return `https://jira.vonaffenfels.de/browse/${this.state.name}`;
     }
 
+    renderBody() {
+        if (this.state.closed) {
+            return null;
+        }
+        return (<div className="toast-body">
+            <div className="btn-group">
+                {this.getPaid()}
+                {this.getStartStop()}
+                <button type="button" className="btn btn-primary btn-sm" onClick={this.props.onTaskRound}>
+                    <i className="fas fa-magic"/>
+                </button>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskUp}>
+                    <i className="fas fa-plus"/>
+                </button>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskDown}>
+                    <i className="fas fa-minus"/>
+                </button>
+            </div>
+        </div>);
+    }
+
     render() {
         return (
             <div className="task toast show mb-2">
@@ -65,25 +86,14 @@ export default class Task extends React.Component {
                     <ContentEditable tag="strong" className="mr-auto" html={this.state.name} onChange={this.onChange.bind(this, "name")}/>
                     {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link mr-1"/></a>) : null}
                     <small className="text-muted"><b>{this.getDuration()}</b></small>
-                    <button type="button" className="ml-2 mb-1 close" onClick={this.props.onTaskRemove}>
+                    <button type="button" className="ml-2 mb-1 close" onClick={this.props.onTaskToggle}>
+                        <i className={"fas fa-xs " + (this.state.closed ? "fa-plus" : "fa-minus")}/>
+                    </button>
+                    <button type="button" className="ml-1 mb-1 close" onClick={this.props.onTaskRemove}>
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div className="toast-body">
-                    <div className="btn-group">
-                        {this.getPaid()}
-                        {this.getStartStop()}
-                        <button type="button" className="btn btn-primary btn-sm" onClick={this.props.onTaskRound}>
-                            <i className="fas fa-magic"/>
-                        </button>
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskUp}>
-                            <i className="fas fa-plus"/>
-                        </button>
-                        <button type="button" className="btn btn-secondary btn-sm" onClick={this.props.onTaskDown}>
-                            <i className="fas fa-minus"/>
-                        </button>
-                    </div>
-                </div>
+                {this.renderBody()}
             </div>
         );
     }
