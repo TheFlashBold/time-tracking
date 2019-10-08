@@ -15,19 +15,17 @@ export default class TaskOverview extends React.Component {
                 <table className="table table-sm table-dark">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Task</th>
                         <th scope="col">Duration</th>
-                        <th scope="col">Paid?</th>
+                        <th scope="col">$</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
                         this.props.tasks.map((task, index) =>
                             (
-                                <tr>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{task.name}</td>
+                                <tr key={index}>
+                                    <th scope="row">{task.name}</th>
                                     <td>{this.getDuration(task)}</td>
                                     <td>{task.paid ? <i className="fas fa-check"/> : null}</td>
                                 </tr>
