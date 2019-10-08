@@ -179,14 +179,19 @@ export default class App extends React.Component {
                            onTaskToggle={this.onTaskToggle.bind(this, task, index)}
                     />)
                 )}
-                <button type="button" className="btn btn-primary w-100 mb-2" onClick={this.onTaskAdd.bind(this, {
-                    name: "Task",
-                    start: moment(),
-                    end: null,
-                    paid: false
-                })}>
-                    <i className="fas fa-plus"/>
-                </button>
+                <div className="btn-group w-100 mb-2">
+                    <button type="button" className="btn btn-primary" onClick={this.onTaskAdd.bind(this, {
+                        name: "Task",
+                        start: moment(),
+                        end: null,
+                        paid: false
+                    })}>
+                        <i className="fas fa-plus"/>
+                    </button>
+                    <button type="button" className="btn btn-info">
+                        <i className="fas fa-stop"/>
+                    </button>
+                </div>
             </React.Fragment>
         )
     }
