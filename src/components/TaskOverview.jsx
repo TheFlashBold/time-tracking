@@ -32,6 +32,11 @@ export default class TaskOverview extends React.Component {
                             )
                         )
                     }
+                    <tr>
+                        <th scope="row">Total:</th>
+                        <td>{this.props.getTotal().asHours().toFixed(2)}</td>
+                        <td/>
+                    </tr>
                     </tbody>
                 </table>
             </div>

@@ -194,7 +194,7 @@ export default class App extends React.Component {
                         <h5 className="mb-0">Time Tracking</h5>
                     </div>
                 </div>
-                {this.state.showOverview ? <TaskOverview tasks={this.state.tasks}/> : this.renderTracker()}
+                {this.state.showOverview ? <TaskOverview tasks={this.state.tasks} getTotal={this.getTotal.bind(this)}/> : this.renderTracker()}
                 <button type="button" className="btn btn-secondary w-100" onClick={this.onToggleOverview.bind(this)}>
                     <i className="fas fa-random"/>
                 </button>
