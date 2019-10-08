@@ -50,11 +50,20 @@ export default class Task extends React.Component {
         }
     }
 
+    isJiraTicket() {
+        return /[A-Z]{2,5}-\d+/.test(this.state.name);
+    }
+
+    getTicketUrl() {
+        return `https://jira.vonaffenfels.de/browse/${this.state.name}`;
+    }
+
     render() {
         return (
             <div className="task toast show mb-2">
                 <div className="toast-header">
                     <ContentEditable tag="strong" className="mr-auto" html={this.state.name} onChange={this.onChange.bind(this, "name")}/>
+                    {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link mr-1"/></a>) : null}
                     <small className="text-muted"><b>{this.getDuration()}</b></small>
                     <button type="button" className="ml-2 mb-1 close" onClick={this.props.onTaskRemove}>
                         <span aria-hidden="true">&times;</span>
