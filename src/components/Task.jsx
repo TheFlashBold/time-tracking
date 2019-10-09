@@ -82,13 +82,10 @@ export default class Task extends React.Component {
     render() {
         return (
             <div className="task toast show mb-2">
-                <div className="toast-header">
+                <div className="toast-header" onClick={this.props.onTaskToggle}>
                     <ContentEditable tag="strong" className="mr-auto" html={this.state.name} onChange={this.onChange.bind(this, "name")}/>
                     {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link mr-1"/></a>) : null}
                     <small className="text-muted"><b>{this.getDuration()}</b></small>
-                    <button type="button" className="ml-2 mb-1 close" onClick={this.props.onTaskToggle}>
-                        <i className={"fas fa-xs " + (this.state.closed ? "fa-plus" : "fa-minus")}/>
-                    </button>
                     <button type="button" className="ml-1 mb-1 close" onClick={this.props.onTaskRemove}>
                         <span aria-hidden="true">&times;</span>
                     </button>
