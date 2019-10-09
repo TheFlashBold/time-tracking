@@ -3,7 +3,7 @@ import Task from "./components/Task"
 import moment from "moment"
 import {formatDuration} from "./lib/Utils"
 import StorageManager from "./lib/StorageManager"
-import TaskOverview from "./components/TaskOverview";
+import TaskTable from "./components/TaskTable";
 
 export default class App extends React.Component {
 
@@ -204,7 +204,7 @@ export default class App extends React.Component {
                         <h5 className="mb-0">Time Tracking</h5>
                     </div>
                 </div>
-                {this.state.showOverview ? <TaskOverview tasks={this.state.tasks} getTotal={this.getTotal.bind(this)}/> : this.renderTracker()}
+                {this.state.showOverview ? <TaskTable tasks={this.state.tasks} getTotal={this.getTotal.bind(this)}/> : this.renderTracker()}
                 <button type="button" className="btn btn-secondary w-100" onClick={this.onToggleOverview.bind(this)}>
                     <i className="fas fa-random"/>
                 </button>

@@ -1,7 +1,7 @@
 import React from "react"
 import moment from "moment"
 
-export default class TaskOverview extends React.Component {
+export default class TaskTable extends React.Component {
 
     getDuration(task) {
         const start = moment(task.start);
@@ -27,7 +27,7 @@ export default class TaskOverview extends React.Component {
                                 <tr key={index}>
                                     <th scope="row">{task.name}</th>
                                     <td>{this.getDuration(task)}</td>
-                                    <td>{task.paid ? <i className="fas fa-check"/> : null}</td>
+                                    <td>{task.paid ? "$" : null}</td>
                                 </tr>
                             )
                         )
