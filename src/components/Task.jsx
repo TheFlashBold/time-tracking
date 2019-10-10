@@ -58,6 +58,35 @@ export default class Task extends React.Component {
         return `https://jira.vonaffenfels.de/browse/${this.state.name}`;
     }
 
+    renderName() {
+        if (this.state.edit) {
+            return (
+                <React.Fragment>
+                    <input className="form-control form-control-sm mr-1" value={this.state.name} onChange={(e) => {this.props.onTaskUpdate({name: e.target.value})}}/>
+                    <a onClick={() => {this.props.onTaskUpdate({edit: false})}}><i className="fas fa-edit"/></a>
+                </React.Fragment>
+            );
+        } else {
+            return (
+                <React.Fragment>
+                    <strong className="mr-auto ml-1">{this.state.name}</strong>
+                    <a onClick={() => {this.props.onTaskUpdate({edit: true})}}><i className="fas fa-edit"/></a>
+                </React.Fragment>
+            );
+        }
+    }
+
+    renderHead() {
+        return (<div className="toast-header pl-1">
+            {this.renderName()}
+            {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link ml-1"/></a>) : null}
+            <small className="text-muted ml-1"><b>{this.getDuration()}</b></small>
+            <button type="button" className="ml-1 mb-1 close" onClick={this.props.onTaskRemove}>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>);
+    }
+
     renderBody() {
         if (this.state.closed) {
             return null;
@@ -82,14 +111,7 @@ export default class Task extends React.Component {
     render() {
         return (
             <div className="task toast show mb-2">
-                <div className="toast-header">
-                    <ContentEditable tag="strong" className="mr-auto" html={this.state.name} onChange={this.onChange.bind(this, "name")}/>
-                    {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link mr-1"/></a>) : null}
-                    <small className="text-muted"><b>{this.getDuration()}</b></small>
-                    <button type="button" className="ml-1 mb-1 close" onClick={this.props.onTaskRemove}>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                {this.renderHead()}
                 {this.renderBody()}
             </div>
         );
