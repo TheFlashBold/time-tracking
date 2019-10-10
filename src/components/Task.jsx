@@ -69,7 +69,7 @@ export default class Task extends React.Component {
         } else {
             return (
                 <React.Fragment>
-                    <strong className="mr-auto ml-1">{this.state.name}</strong>
+                    <strong className="mr-1 ml-1">{this.state.name}</strong>
                     <a onClick={() => {this.props.onTaskUpdate({edit: true})}}><i className="fas fa-edit"/></a>
                 </React.Fragment>
             );
