@@ -78,7 +78,8 @@ export default class TaskList extends React.Component {
         } else {
             task.start = moment(task.start).subtract(amount, "minutes");
         }
-        task.duration = moment.duration(moment(task.end).diff(moment(task.start)));
+        const end = task.end ? moment(task.end) : moment();
+        task.duration = moment.duration(end.diff(moment(task.start)));
         this.onTaskUpdate(index, task);
     }
 
