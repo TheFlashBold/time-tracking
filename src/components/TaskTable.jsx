@@ -22,7 +22,7 @@ export default class TaskTable extends React.Component {
                     </thead>
                     <tbody>
                     {
-                        this.props.tasks.concat([]).sort((a, b) => a.name.localeCompare(b.name)).map((task, index) =>
+                        this.props.tasks.map((task, index) =>
                             (
                                 <tr key={index}>
                                     <th scope="row">{task.name}</th>
