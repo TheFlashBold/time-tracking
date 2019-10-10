@@ -31,14 +31,14 @@ export default class TaskList extends React.Component {
         return moment.duration(8, "hours").subtract(this.props.getTotal().asMinutes(), "minutes");
     }
 
-    onTaskToggle(task, index) {
-        this.onTaskUpdate(task, index, {closed: !task.closed});
-    }
-
     onTaskUpdate(index, data) {
         const tasks = this.state.tasks.concat([]);
         tasks[index] = Object.assign(tasks[index], data);
         this.props.onTasksUpdate(tasks);
+    }
+
+    onTaskToggle(task, index) {
+        this.onTaskUpdate(task, index, {closed: !task.closed});
     }
 
     onTaskStop(task, index) {
@@ -88,7 +88,7 @@ export default class TaskList extends React.Component {
         });
     }
 
-    onTaskRemove(index) {
+    onTaskRemove(task, index) {
         const tasks = this.state.tasks.concat([]);
         tasks.splice(index, 1);
         this.setState({
