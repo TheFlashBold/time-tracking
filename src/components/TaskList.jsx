@@ -67,7 +67,7 @@ export default class TaskList extends React.Component {
         }
 
         this.onTaskUpdate(index, {
-            start: end.subtract(duration.asMinutes(), "minutes"),
+            start: end.clone().subtract(duration.asMinutes(), "minutes"),
             end: isRunning ? null : end,
             duration
         });
