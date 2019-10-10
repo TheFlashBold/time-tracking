@@ -57,7 +57,7 @@ export default class TaskList extends React.Component {
 
     onTaskRound(task, index) {
         const end = task.end ? moment(task.end) : moment();
-        const duration = moment.duration(end.diff(task.start));
+        const duration = moment.duration(end.diff(moment(task.start)));
 
         if (duration.asMinutes() < 5 || duration.asMinutes() % 15 > 5) {
             duration.add(15 - duration.asMinutes() % 15, "minutes");
