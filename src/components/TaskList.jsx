@@ -114,7 +114,7 @@ export default class TaskList extends React.Component {
                     </div>
                 </div>
                 {this.state.tasks.map((task, index) =>
-                    (<Task key={index + String(task.start) + String(task.duration)}
+                    (<Task key={index + JSON.stringify(task)}
                            data={task}
                            onTaskUpdate={this.onTaskUpdate.bind(this, index)}
                            onTaskRemove={this.onTaskRemove.bind(this, task, index)}
