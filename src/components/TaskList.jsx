@@ -5,16 +5,9 @@ import {formatDuration} from "../lib/Utils";
 
 export default class TaskList extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            tasks: props.tasks
-        };
-    }
-
     onCreateMissingTask() {
         const start = moment().subtract(this.getMissing().asMinutes(), "minutes");
-        this.onTaskAdd({
+        this.props.onTaskAdd({
             name: "Task",
             start: start,
             end: moment(),
@@ -32,7 +25,7 @@ export default class TaskList extends React.Component {
     }
 
     onTaskUpdate(index, data) {
-        const tasks = this.state.tasks.concat([]);
+        const tasks = this.props.tasks.concat([]);
         tasks[index] = Object.assign(tasks[index], data);
         this.props.onTasksUpdate(tasks);
     }
@@ -84,20 +77,6 @@ export default class TaskList extends React.Component {
         this.onTaskUpdate(index, task);
     }
 
-    onTaskAdd(item) {
-        this.setState({
-            tasks: this.state.tasks.concat([item])
-        });
-    }
-
-    onTaskRemove(task, index) {
-        const tasks = this.state.tasks.concat([]);
-        tasks.splice(index, 1);
-        this.setState({
-            tasks
-        });
-    }
-
     render() {
         const missingDuration = this.getMissing();
         const total = this.props.getTotal();
@@ -115,11 +94,11 @@ export default class TaskList extends React.Component {
                             </button>) : null}
                     </div>
                 </div>
-                {this.state.tasks.map((task, index) =>
+                {this.props.tasks.map((task, index) =>
                     (<Task key={index + String(task.start) + String(task.duration)}
                            data={task}
                            onTaskUpdate={this.onTaskUpdate.bind(this, index)}
-                           onTaskRemove={this.onTaskRemove.bind(this, task, index)}
+                           onTaskRemove={() => {this.props.onTaskRemove(task, index)}}
                            onTaskStop={this.onTaskStop.bind(this, task, index)}
                            onTaskResume={this.onTaskResume.bind(this, task, index)}
                            onTaskRound={this.onTaskRound.bind(this, task, index)}
@@ -129,12 +108,14 @@ export default class TaskList extends React.Component {
                     />)
                 )}
                 <div className="btn-group w-100 mb-2">
-                    <button type="button" className="btn btn-primary" onClick={this.onTaskAdd.bind(this, {
-                        name: "Task",
-                        start: moment(),
-                        end: null,
-                        paid: false
-                    })}>
+                    <button type="button" className="btn btn-primary" onClick={() => {
+                        this.props.onTaskAdd({
+                            name: "Task",
+                            start: moment(),
+                            end: null,
+                            paid: false
+                        })
+                    }}>
                         <i className="fas fa-plus"/>
                     </button>
                 </div>

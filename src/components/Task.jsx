@@ -4,19 +4,14 @@ import ContentEditable from "./ContentEditable";
 
 export default class Task extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = this.props.data;
-    }
-
     onChange(key, event) {
         const value = !event.target ? event : event.target.value;
         this.props.onTaskUpdate({[key]: value});
     }
 
     getDuration() {
-        const start = moment(this.state.start);
-        const end = this.state.end ? moment(this.state.end) : moment();
+        const start = moment(this.props.data.start);
+        const end = this.props.data.end ? moment(this.props.data.end) : moment();
         const diff = end.diff(start);
 
         if (diff < 0) {
@@ -27,7 +22,7 @@ export default class Task extends React.Component {
     }
 
     getPaid() {
-        if (this.state.paid) {
+        if (this.props.data.paid) {
             return (<button type="button" className="btn btn-light btn-sm" onClick={this.onChange.bind(this, "paid", false)}>
                 <i className="fas fa-dollar-sign"/>
             </button>);
@@ -39,7 +34,7 @@ export default class Task extends React.Component {
     }
 
     getStartStop() {
-        if (this.state.end) {
+        if (this.props.data.end) {
             return (<button type="button" className="btn btn-success btn-sm" onClick={this.props.onTaskResume}>
                 <i className="fas fa-play"/>
             </button>);
@@ -51,34 +46,16 @@ export default class Task extends React.Component {
     }
 
     isJiraTicket() {
-        return /[A-Z]{2,5}-\d+/.test(this.state.name);
+        return /[A-Z]{2,5}-\d+/.test(this.props.data.name);
     }
 
     getTicketUrl() {
-        return `https://jira.vonaffenfels.de/browse/${this.state.name}`;
-    }
-
-    renderName() {
-        if (this.state.edit) {
-            return (
-                <React.Fragment>
-                    <input className="form-control form-control-sm mr-1" value={this.state.name} onChange={(e) => {this.props.onTaskUpdate({name: e.target.value})}}/>
-                    <a onClick={() => {this.props.onTaskUpdate({edit: false})}}><i className="fas fa-edit"/></a>
-                </React.Fragment>
-            );
-        } else {
-            return (
-                <React.Fragment>
-                    <strong className="mr-auto ml-1">{this.state.name}</strong>
-                    <a onClick={() => {this.props.onTaskUpdate({edit: true})}}><i className="fas fa-edit"/></a>
-                </React.Fragment>
-            );
-        }
+        return `https://jira.vonaffenfels.de/browse/${this.props.data.name}`;
     }
 
     renderHead() {
         return (<div className="toast-header pl-1">
-            {this.renderName()}
+            <ContentEditable className="mr-auto" tag="strong" useText html={this.props.data.name} onChange={(name) => {this.props.onTaskUpdate({name: name})}}/>
             {this.isJiraTicket() ? (<a href={this.getTicketUrl()} target="_blank"><i className="fas fa-link ml-1"/></a>) : null}
             <small className="text-muted ml-1"><b>{this.getDuration()}</b></small>
             <button type="button" className="ml-1 mb-1 close" onClick={this.props.onTaskRemove}>
@@ -88,7 +65,7 @@ export default class Task extends React.Component {
     }
 
     renderBody() {
-        if (this.state.closed) {
+        if (this.props.data.closed) {
             return null;
         }
         return (<div className="toast-body">
